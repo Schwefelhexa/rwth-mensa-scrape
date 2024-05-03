@@ -1,18 +1,33 @@
-const url = (name: string) => `https://www.studierendenwerk-aachen.de/de/Gastronomie/mensa-${encodeURIComponent(name.toLowerCase())}-wochenplan.html`
+import { load } from 'cheerio';
+import { mondayOf } from './date';
+
+const url = (name: string) => `https://www.studierendenwerk-aachen.de/speiseplaene/${encodeURIComponent(name.toLowerCase())}-w.html`
 
 export interface Day {
 	date: Date
 	meals: Meal[]
 }
 
-export interface Meal {}
+export interface Meal { }
 
 export async function scrape(name: string): Promise<Day[]> {
 	const response = await fetch(url(name));
 	const html = await response.text();
-	console.log(html);
+	const $ = load(html);
 
-	return [
-		{date: new Date(), meals: []},
-	]
+	const monday = mondayOf(new Date());
+	// Null elements are 'spacers' for the weekend, to make index calculation easier
+	const idsToCheck = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', null, null, 'MontagNaechste', 'DienstagNaechste', 'MittwochNaechste', 'DonnerstagNaechste', 'FreitagNaechste'];
+
+	const days: Day[] = idsToCheck.map((id, idx) => {
+		if (id === null) return null;
+		const elem = $(`#${id}`);
+		if (!elem) return null;
+
+		const date = new Date(monday);
+		date.setDate(date.getDate() + idx);
+		return { date, meals: [] } as Day;
+	}).filter(day => day !== null) as Day[];
+
+	return days;
 }
