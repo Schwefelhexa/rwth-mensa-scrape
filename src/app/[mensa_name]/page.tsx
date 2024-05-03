@@ -8,7 +8,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 			<p>{params.mensa_name}</p>
 			<ul>
 				{days.map((day) => (
-					<li key={day.date.getTime()}>{day.date.toLocaleDateString("de-DE")}: <ul>{day.meals.map(meal => <li key={meal.description}>[{meal.category}] {meal.description} ({meal.price})</li>)}</ul></li>
+					<li key={day.date.getTime()}>{day.date.toLocaleDateString("de-DE")}: <ul>{day.meals.map(meal => <li key={meal.name}>[{meal.category}] {meal.name} +{meal.additions.length} ({meal.price}) - Allergens: {JSON.stringify(meal.allergens)}</li>)}</ul></li>
 				))}
 			</ul>
 		</div>

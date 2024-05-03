@@ -10,8 +10,10 @@ export interface Day {
 
 export interface Meal {
 	category: string
-	description: string
+	name: string
+	additions: string[]
 	price: string
+	allergens: string[]
 }
 
 export async function scrape(name: string): Promise<Day[]> {
@@ -34,9 +36,13 @@ export async function scrape(name: string): Promise<Day[]> {
 		const meals = elem.find('.menue-wrapper').map((_, e) => {
 			const elem = $(e);
 			const category = elem.find('.menue-category').text();
-			const description = elem.find('.menue-desc').text();
+			const desc = elem.find('.menue-desc .expand-nutr').contents().filter((_, e) => e.nodeType === 3).text().trim();
+			const name = desc.split('|')[0];
+			const additions = desc.split('|').slice(1);
+			const allergens = elem.find('.menue-desc .expand-nutr').find('sup').map((_, e) => $(e).text().trim()).toArray().flatMap(e => e.split(','));
+			const allergensUnique = [...new Set(allergens)];
 			const price = elem.find('.menue-price').text();
-			return { category, description, price } as Meal;
+			return { category, name, additions, price, allergens: allergensUnique } as Meal;
 		}).toArray();
 
 		return { date, meals } as Day;
