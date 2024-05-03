@@ -17,7 +17,7 @@ export interface Meal {
 }
 
 export async function scrape(name: string): Promise<Day[]> {
-	const response = await fetch(url(name));
+	const response = await fetch(url(name), { next: { revalidate: 60 * 60 } }); // Cache response for 1h
 	const html = await response.text();
 	const $ = load(html);
 
