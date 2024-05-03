@@ -8,7 +8,11 @@ export interface Day {
 	meals: Meal[]
 }
 
-export interface Meal { }
+export interface Meal {
+	category: string
+	description: string
+	price: string
+}
 
 export async function scrape(name: string): Promise<Day[]> {
 	const response = await fetch(url(name));
@@ -26,7 +30,16 @@ export async function scrape(name: string): Promise<Day[]> {
 
 		const date = new Date(monday);
 		date.setDate(date.getDate() + idx);
-		return { date, meals: [] } as Day;
+
+		const meals = elem.find('.menue-wrapper').map((_, e) => {
+			const elem = $(e);
+			const category = elem.find('.menue-category').text();
+			const description = elem.find('.menue-desc').text();
+			const price = elem.find('.menue-price').text();
+			return { category, description, price } as Meal;
+		}).toArray();
+
+		return { date, meals } as Day;
 	}).filter(day => day !== null) as Day[];
 
 	return days;
