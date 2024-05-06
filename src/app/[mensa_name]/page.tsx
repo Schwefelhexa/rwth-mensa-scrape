@@ -40,15 +40,20 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 								<ul className="flex flex-col gap-1">
 									{day.meals.map(m => [m, icons[m.category] ?? CircleHelp] as [Meal, Icon]).map(([meal, Icon]) => (
 										<li key={meal.name}>
-											<Tooltip>
-												<TooltipTrigger>
-													<Icon className="inline-block w-6 h-6 mr-2 -mt-4" />
-													<span className="inline-block text-nowrap max-w-[25ch] text-ellipsis overflow-hidden">
-														{meal.name}
-													</span>
-												</TooltipTrigger>
-												<TooltipContent>{meal.name}</TooltipContent>
-											</Tooltip>
+											<div className="flex justify-between w-full">
+												<div>
+													<Tooltip>
+														<TooltipTrigger>
+															<Icon className="inline-block w-6 h-6 mr-2 -mt-4" />
+															<span className="inline-block text-nowrap max-w-[22ch] text-ellipsis overflow-hidden">
+																{meal.name}
+															</span>
+														</TooltipTrigger>
+														<TooltipContent>{meal.name}</TooltipContent>
+													</Tooltip>
+												</div>
+												<span className="text-sm">{meal.price}</span>
+											</div>
 										</li>
 									))}
 								</ul>
