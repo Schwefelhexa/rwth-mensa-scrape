@@ -43,7 +43,7 @@ export async function scrape(name: string): Promise<Day[]> {
 			const allergensUnique = [...new Set(allergens)];
 			const price = elem.find('.menue-price').text();
 			return { category, name, additions, price, allergens: allergensUnique } as Meal;
-		}).toArray();
+		}).toArray().filter(meal => meal !== null && meal.name.trim() !== "") as Meal[];
 
 		return { date, meals } as Day;
 	}).filter(day => day !== null) as Day[];

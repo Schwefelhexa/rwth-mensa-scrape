@@ -1,18 +1,60 @@
-import { scrape } from "@/core/scrape"
+import { type LucideProps, Soup, CircleHelp, LeafyGreen, Drumstick, CookingPot, Sandwich, Pizza } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { type Meal, scrape } from "@/core/scrape"
+import type { ForwardRefExoticComponent, RefAttributes } from "react"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+
+type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+const icons: Record<string, Icon> = {
+	"Tellergericht": Soup,
+	"Tellergericht vegetarisch": Soup,
+	"Vegetarisch": LeafyGreen,
+	"Klassiker": Drumstick,
+	"Wok": CookingPot,
+	"Burger Classics": Sandwich,
+	"Burger der Woche": Sandwich,
+	"Pizza Classics": Pizza,
+	"Pizza des Tages": Pizza,
+}
+
+// TODO: Report unknown categories
 
 export default async function Mensa({ params }: { params: { mensa_name: string } }) {
 	const days = await scrape(params.mensa_name)
 	const today = new Date()
 	today.setHours(0, 0, 0, 0)
 
-	const upcoming = days.filter(day => day.date >= today).slice(0, 3)
+	const upcoming = days.filter(day => day.date >= today).filter(d => d.meals.length > 0).slice(0, 5)
 
 	return (
-		<div className="min-h-screen">
-			<p>{params.mensa_name}</p>
-			<ul>
+		<div className="px-4 py-4 flex flex-col gap-8 max-w-3xl mx-auto">
+			<h1 className="text-2xl font-black">Mensa {params.mensa_name[0].toUpperCase()}{params.mensa_name.slice(1)}</h1>
+			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
-					<li key={day.date.getTime()}>{day.date.toLocaleDateString("de-DE")}: <ul>{day.meals.map(meal => <li key={meal.name}>[{meal.category}] {meal.name} +{meal.additions.length} ({meal.price}) - Allergens: {JSON.stringify(meal.allergens)}</li>)}</ul></li>
+					<li key={day.date.getTime()}>
+						<Card>
+							<CardHeader>
+								<CardTitle>{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<ul className="flex flex-col gap-1">
+									{day.meals.map(m => [m, icons[m.category] ?? CircleHelp] as [Meal, Icon]).map(([meal, Icon]) => (
+										<li key={meal.name}>
+											<Tooltip>
+												<TooltipTrigger>
+													<Icon className="inline-block w-6 h-6 mr-2 -mt-4" />
+													<span className="inline-block text-nowrap max-w-[25ch] text-ellipsis overflow-hidden">
+														{meal.name}
+													</span>
+												</TooltipTrigger>
+												<TooltipContent>{meal.name}</TooltipContent>
+											</Tooltip>
+										</li>
+									))}
+								</ul>
+							</CardContent>
+						</Card>
+					</li>
 				))}
 			</ul>
 		</div>
