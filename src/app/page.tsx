@@ -18,7 +18,7 @@ export default function Home() {
 			</div>
 			<section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 				{mensas.map((mensa => (
-					<div className="relative group overflow-hidden rounded-lg hover:shadow-xl transition-shadow ease-in-out">
+					<div key={mensa.slug} className="relative group overflow-hidden rounded-lg hover:shadow-xl transition-shadow ease-in-out">
 						<Link className="absolute inset-0 z-10" href={`/${mensa.slug}`}>
 							<span className="sr-only">View Mensa</span>
 						</Link>
