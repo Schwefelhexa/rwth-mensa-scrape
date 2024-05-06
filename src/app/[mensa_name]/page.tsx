@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type Meal, scrape } from "@/core/scrape"
 import type { ForwardRefExoticComponent, RefAttributes } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { getMensa } from "@/core/data";
 
 type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 const icons: Record<string, Icon> = {
@@ -20,6 +21,8 @@ const icons: Record<string, Icon> = {
 // TODO: Report unknown categories
 
 export default async function Mensa({ params }: { params: { mensa_name: string } }) {
+	const mensa = getMensa(params.mensa_name)
+
 	const days = await scrape(params.mensa_name)
 	const today = new Date()
 	today.setHours(0, 0, 0, 0)
@@ -28,7 +31,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 
 	return (
 		<div className="px-4 py-4 flex flex-col gap-8 max-w-3xl mx-auto">
-			<h1 className="text-2xl font-black">Mensa {params.mensa_name[0].toUpperCase()}{params.mensa_name.slice(1)}</h1>
+			<h1 className="text-2xl font-black">Mensa {mensa?.display_name}</h1>
 			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
 					<li key={day.date.getTime()}>
