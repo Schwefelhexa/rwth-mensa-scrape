@@ -4,6 +4,7 @@ import { type Meal, scrape } from "@/core/scrape"
 import type { ForwardRefExoticComponent, RefAttributes } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getMensa } from "@/core/data";
+import { notFound } from "next/navigation";
 
 type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 const icons: Record<string, Icon> = {
@@ -22,6 +23,7 @@ const icons: Record<string, Icon> = {
 
 export default async function Mensa({ params }: { params: { mensa_name: string } }) {
 	const mensa = getMensa(params.mensa_name)
+	if (!mensa) notFound();
 
 	const days = await scrape(params.mensa_name)
 	const today = new Date()
