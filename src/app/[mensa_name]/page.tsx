@@ -37,7 +37,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
 					<li key={day.date.getTime()}>
-						<Card>
+						<Card className="h-full">
 							<CardHeader>
 								<CardTitle>{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}</CardTitle>
 							</CardHeader>
