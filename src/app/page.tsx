@@ -1,7 +1,12 @@
 import { Input } from "@/components/ui/input";
 import { mensas } from "@/core/data";
 import { SearchIcon } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+	title: "RWTH Mensa-Menü",
+}
 
 export default function Home() {
 	return (

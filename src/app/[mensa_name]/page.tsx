@@ -21,6 +21,15 @@ const icons: Record<string, Icon> = {
 
 // TODO: Report unknown categories
 
+export async function generateMetadata({ params }: { params: { mensa_name: string } }) {
+	const mensa = getMensa(params.mensa_name)
+	if (!mensa) notFound();
+
+	return {
+		title: `Menü Mensa ${mensa.display_name}`,
+	}
+}
+
 export default async function Mensa({ params }: { params: { mensa_name: string } }) {
 	const mensa = getMensa(params.mensa_name)
 	if (!mensa) notFound();
