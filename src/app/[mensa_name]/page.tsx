@@ -1,4 +1,4 @@
-import { type LucideProps, Soup, CircleHelp, LeafyGreen, Drumstick, CookingPot, Sandwich, Pizza, Utensils } from "lucide-react"
+import { type LucideProps, Soup, CircleHelp, LeafyGreen, Drumstick, CookingPot, Sandwich, Pizza, Utensils, Sparkles } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type Meal, scrape } from "@/core/scrape"
 import type { ForwardRefExoticComponent, RefAttributes } from "react"
@@ -20,6 +20,7 @@ const icons: Record<string, Icon> = {
 	"Burger der Woche": Sandwich,
 	"Pizza Classics": Pizza,
 	"Pizza des Tages": Pizza,
+	"Empfehlung des Tages": Sparkles,
 }
 
 // TODO: Report unknown categories
