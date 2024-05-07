@@ -84,8 +84,8 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 									<Separator className="absolute inset-x-0" />
 								</div>
 								<ul className="-mb-1">
-									<li className="flex gap-2"><span className="text-muted-foreground font-medium">Dazu:</span> {day.sides.primaries.join(", ")}</li>
-									<li className="flex gap-2"><span className="text-muted-foreground font-medium">Und:</span> {day.sides.secondaries.join(", ")}</li>
+									<li className="flex gap-2 leading-tight pb-1"><span className="text-muted-foreground font-medium">Dazu:</span> {day.sides.primaries.join(", ")}</li>
+									<li className="flex gap-2 leading-tight"><span className="text-muted-foreground font-medium">Und:</span> {day.sides.secondaries.join(", ")}</li>
 								</ul>
 							</CardContent>
 						</Card>
