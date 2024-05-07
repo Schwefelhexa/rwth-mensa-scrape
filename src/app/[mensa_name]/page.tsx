@@ -51,14 +51,14 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
 					<li key={day.date.getTime()}>
-						<Card className={cn("h-full", eq(day.date, today) && "border-foreground border-2 bg-gray-100")}>
+						<Card className={cn("flex flex-col h-full", eq(day.date, today) && "border-foreground border-2 bg-gray-100")}>
 							<CardHeader>
 								<CardTitle className="flex items-center gap-3">
 									{eq(day.date, today) && <Badge className="mt-0.5">Heute</Badge>}
 									{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="relative flex flex-col gap-2">
+							<CardContent className="relative flex flex-col gap-2 flex-grow">
 								<ul className="flex flex-col gap-1">
 									{day.meals.map(m => [m, icons[m.category] ?? CircleHelp] as [Meal, Icon]).map(([meal, Icon]) => (
 										<li key={meal.name}>
@@ -79,6 +79,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 										</li>
 									))}
 								</ul>
+								<div className="flex-grow" />
 								<div className="h-1">
 									<Separator className="absolute inset-x-0" />
 								</div>
