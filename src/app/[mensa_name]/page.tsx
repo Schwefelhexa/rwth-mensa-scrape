@@ -5,6 +5,8 @@ import type { ForwardRefExoticComponent, RefAttributes } from "react"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getMensa } from "@/core/data";
 import { notFound } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 const icons: Record<string, Icon> = {
@@ -30,6 +32,8 @@ export async function generateMetadata({ params }: { params: { mensa_name: strin
 	}
 }
 
+const eq = (a: Date, b: Date): boolean => a.getTime() === b.getTime();
+
 export default async function Mensa({ params }: { params: { mensa_name: string } }) {
 	const mensa = getMensa(params.mensa_name)
 	if (!mensa) notFound();
@@ -46,9 +50,12 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
 					<li key={day.date.getTime()}>
-						<Card className="h-full">
+						<Card className={cn("h-full", eq(day.date, today) && "border-foreground border-2 bg-gray-100")}>
 							<CardHeader>
-								<CardTitle>{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}</CardTitle>
+								<CardTitle className="flex items-center gap-3">
+									{eq(day.date, today) && <Badge className="mt-0.5">Heute</Badge>}
+									{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}
+								</CardTitle>
 							</CardHeader>
 							<CardContent>
 								<ul className="flex flex-col gap-1">
