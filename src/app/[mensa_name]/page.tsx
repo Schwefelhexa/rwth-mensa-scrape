@@ -1,4 +1,4 @@
-import { type LucideProps, Soup, CircleHelp, LeafyGreen, Drumstick, CookingPot, Sandwich, Pizza } from "lucide-react"
+import { type LucideProps, Soup, CircleHelp, LeafyGreen, Drumstick, CookingPot, Sandwich, Pizza, Utensils } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { type Meal, scrape } from "@/core/scrape"
 import type { ForwardRefExoticComponent, RefAttributes } from "react"
@@ -7,6 +7,7 @@ import { getMensa } from "@/core/data";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 type Icon = ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
 const icons: Record<string, Icon> = {
@@ -50,14 +51,14 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 			<ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
 				{upcoming.map((day) => (
 					<li key={day.date.getTime()}>
-						<Card className={cn("h-full", eq(day.date, today) && "border-foreground border-2 bg-gray-100")}>
+						<Card className={cn("flex flex-col h-full", eq(day.date, today) && "border-foreground border-2 bg-gray-100")}>
 							<CardHeader>
 								<CardTitle className="flex items-center gap-3">
 									{eq(day.date, today) && <Badge className="mt-0.5">Heute</Badge>}
 									{day.date.toLocaleDateString("de-DE", { dateStyle: "full" })}
 								</CardTitle>
 							</CardHeader>
-							<CardContent>
+							<CardContent className="relative flex flex-col gap-2 flex-grow">
 								<ul className="flex flex-col gap-1">
 									{day.meals.map(m => [m, icons[m.category] ?? CircleHelp] as [Meal, Icon]).map(([meal, Icon]) => (
 										<li key={meal.name}>
@@ -77,6 +78,14 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 											</div>
 										</li>
 									))}
+								</ul>
+								<div className="flex-grow" />
+								<div className="h-1">
+									<Separator className="absolute inset-x-0" />
+								</div>
+								<ul className="-mb-1">
+									<li className="flex gap-2 leading-tight pb-1"><span className="text-muted-foreground font-medium">Dazu:</span> {day.sides.primaries.join(", ")}</li>
+									<li className="flex gap-2 leading-tight"><span className="text-muted-foreground font-medium">Und:</span> {day.sides.secondaries.join(", ")}</li>
 								</ul>
 							</CardContent>
 						</Card>

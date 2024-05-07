@@ -6,6 +6,10 @@ const url = (name: string) => `https://www.studierendenwerk-aachen.de/speiseplae
 export interface Day {
 	date: Date
 	meals: Meal[]
+	sides: {
+		primaries: string[]
+		secondaries: string[]
+	}
 }
 
 export interface Meal {
@@ -34,7 +38,7 @@ export async function scrape(name: string): Promise<Day[]> {
 		const date = new Date(monday);
 		date.setDate(date.getDate() + idx);
 
-		const meals = elem.find('.menue-wrapper').map((_, e) => {
+		const meals = elem.find('.menues .menue-wrapper').map((_, e) => {
 			const elem = $(e);
 			const category = elem.find('.menue-category').text();
 			const desc = elem.find('.menue-desc .expand-nutr').contents().filter((_, e) => e.nodeType === 3).text().trim();
@@ -46,7 +50,13 @@ export async function scrape(name: string): Promise<Day[]> {
 			return { category, name, additions, price, allergens: allergensUnique } as Meal;
 		}).toArray().filter(meal => meal !== null && meal.name.trim() !== "") as Meal[];
 
-		return { date, meals } as Day;
+		const sides = elem.find('.extras .menue-wrapper').toArray().map((e) => {
+			const elem = $(e);
+			const items = elem.find('.menue-desc').contents().filter((_, e) => e.nodeType === 3).toArray().map(e => $(e).text().trim());
+			return items
+		})
+
+		return { date, meals, sides: { primaries: sides[0], secondaries: sides[1] } } as Day;
 	}).filter(day => day !== null) as Day[];
 
 	return days;
