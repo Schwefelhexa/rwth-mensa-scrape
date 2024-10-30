@@ -40,7 +40,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 	const mensa = getMensa(params.mensa_name)
 	if (!mensa) notFound();
 
-	const days = await scrape(params.mensa_name)
+	const { days, date } = await scrape(params.mensa_name)
 	const today = new Date()
 	today.setHours(0, 0, 0, 0)
 
@@ -93,6 +93,7 @@ export default async function Mensa({ params }: { params: { mensa_name: string }
 					</li>
 				))}
 			</ul>
+			<p className="text-center text-muted-foreground">Last updated on {date.toLocaleString()}</p>
 		</div>
 	)
 }

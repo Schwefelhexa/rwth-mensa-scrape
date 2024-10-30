@@ -20,9 +20,17 @@ export interface Meal {
 	allergens: string[]
 }
 
-export async function scrape(name: string): Promise<Day[]> {
+export interface ParseResult {
+	date: Date
+	days: Day[]
+}
+
+export async function scrape(name: string): Promise<ParseResult> {
+	console.log(`Scraping for Mensa '${name}'...`)
+
 	const response = await fetch(url(name), { next: { revalidate: 60 * 60 } }); // Cache response for 1h
 	if (!response.ok) throw new Error(`Failed to fetch ${url(name)}: ${response.status}`);
+	const date = new Date(response.headers.get('date')!);
 	const html = await response.text();
 	const $ = load(html);
 
@@ -59,5 +67,7 @@ export async function scrape(name: string): Promise<Day[]> {
 		return { date, meals, sides: { primaries: sides[0], secondaries: sides[1] } } as Day;
 	}).filter(day => day !== null) as Day[];
 
-	return days;
+	console.log(`Scraped ${days.length} days for Mensa '${name}'`);
+
+	return { days, date };
 }
