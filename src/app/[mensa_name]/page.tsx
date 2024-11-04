@@ -37,6 +37,8 @@ export async function generateMetadata(props: { params: Promise<{ mensa_name: st
 
 const eq = (a: Date, b: Date): boolean => a.getTime() === b.getTime();
 
+export const revalidate = 60;  // Revalidate once per minute
+
 export default async function Mensa(props: { params: Promise<{ mensa_name: string }> }) {
 	const params = await props.params;
 	const mensa = getMensa(params.mensa_name)
