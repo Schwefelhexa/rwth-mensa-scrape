@@ -25,7 +25,8 @@ const icons: Record<string, Icon> = {
 
 // TODO: Report unknown categories
 
-export async function generateMetadata({ params }: { params: { mensa_name: string } }) {
+export async function generateMetadata(props: { params: Promise<{ mensa_name: string }> }) {
+	const params = await props.params;
 	const mensa = getMensa(params.mensa_name)
 	if (!mensa) notFound();
 
@@ -36,7 +37,8 @@ export async function generateMetadata({ params }: { params: { mensa_name: strin
 
 const eq = (a: Date, b: Date): boolean => a.getTime() === b.getTime();
 
-export default async function Mensa({ params }: { params: { mensa_name: string } }) {
+export default async function Mensa(props: { params: Promise<{ mensa_name: string }> }) {
+	const params = await props.params;
 	const mensa = getMensa(params.mensa_name)
 	if (!mensa) notFound();
 
